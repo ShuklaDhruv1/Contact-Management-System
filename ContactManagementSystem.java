@@ -4,10 +4,14 @@ import java.util.Scanner;
 
 public class ContactManagementSystem {
 
-    static ArrayList<Contact> contacts = new ArrayList<>();
+    static ArrayList<Contact> contacts =
+            ContactFileHandler.loadContacts();
+
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
+
+        System.out.println("Contacts loaded: " + contacts.size());
 
         while (true) {
 
@@ -23,6 +27,7 @@ public class ContactManagementSystem {
             System.out.println("================================");
 
             System.out.print("Enter your choice: ");
+
             int choice = sc.nextInt();
             sc.nextLine();
 
@@ -49,7 +54,7 @@ public class ContactManagementSystem {
                     break;
 
                 case 6:
-                    System.out.println("Thank you for using the Contact Management System!");
+                    System.out.println("Goodbye!");
                     sc.close();
                     return;
 
@@ -72,7 +77,7 @@ public class ContactManagementSystem {
 
         contacts.add(new Contact(name, phone, email));
 
-        System.out.println("Contact added successfully!");
+        ContactFileHandler.saveContacts(contacts);
     }
 
     public static void viewContacts() {
@@ -95,7 +100,6 @@ public class ContactManagementSystem {
         for (Contact contact : contacts) {
 
             if (contact.getName().equalsIgnoreCase(name)) {
-                System.out.println("Contact found!");
                 contact.displayContact();
                 return;
             }
@@ -106,7 +110,7 @@ public class ContactManagementSystem {
 
     public static void updateContact() {
 
-        System.out.print("Enter name of contact to update: ");
+        System.out.print("Enter name to update: ");
         String name = sc.nextLine();
 
         for (Contact contact : contacts) {
@@ -119,7 +123,7 @@ public class ContactManagementSystem {
                 System.out.print("Enter new email: ");
                 contact.setEmail(sc.nextLine());
 
-                System.out.println("Contact updated successfully!");
+                ContactFileHandler.saveContacts(contacts);
                 return;
             }
         }
@@ -129,14 +133,16 @@ public class ContactManagementSystem {
 
     public static void deleteContact() {
 
-        System.out.print("Enter name of contact to delete: ");
+        System.out.print("Enter name to delete: ");
         String name = sc.nextLine();
 
         for (int i = 0; i < contacts.size(); i++) {
 
             if (contacts.get(i).getName().equalsIgnoreCase(name)) {
+
                 contacts.remove(i);
-                System.out.println("Contact deleted successfully!");
+
+                ContactFileHandler.saveContacts(contacts);
                 return;
             }
         }
